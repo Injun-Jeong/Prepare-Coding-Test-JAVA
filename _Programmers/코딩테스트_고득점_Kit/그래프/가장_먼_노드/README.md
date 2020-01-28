@@ -20,106 +20,7 @@ n개의 노드가 있는 그래프가 있습니다. 각 노드는 1부터 n까�
 
 ---
 
-### 입출력 예
-
-![Level%203/Untitled.png](Level%203/Untitled.png)
-
----
-
-### 입출력 예 설명
-
-예제
-
-- 예제의 그래프를 표현하면 아래 그림과 같고, 1번 노드에서 가장 멀리 떨어진 노드는 4,5,6번 노드입니다.
-
-    ![Level%203/Untitled%201.png](Level%203/Untitled%201.png)
-
----
-
 ## 문제 해결
-
-### 전체 소스 코드 및 설명 - BFS 활용
-
-    import java.util.ArrayList;
-    import java.util.HashMap;
-    
-    class Solution {
-        int max = 0;
-    
-        enum Color {
-            WHITE, BLACK, GRAY
-        }
-    
-        class Vertex {
-            Color color;
-            int distance;
-            Vertex preVertex;
-    
-            Vertex() {
-                this.color = Color.WHITE;
-                this.distance = 0;
-                this.preVertex = null;
-            }
-        }
-    
-        public int solution(int n, int[][] edge) {
-            int answer = 0;
-    
-            /* initialize all vertices */
-            HashMap<Integer, Vertex> vertices = new HashMap<Integer, Vertex>();
-            for (int i = 1; i <= n; i++)
-                vertices.put(i, new Vertex());
-    
-            /* initialize the graph */
-            HashMap<Vertex, ArrayList<Vertex>> graph = new HashMap<Vertex, ArrayList<Vertex>>();
-            for (int i = 1; i <= n; i++)
-                graph.put(vertices.get(i), new ArrayList<Vertex>());
-    
-            /* make all edges in the graph */
-            for (int[] e : edge) {
-                int source = e[0], destination = e[1];
-                graph.get(vertices.get(source)).add(vertices.get(destination));
-                graph.get(vertices.get(destination)).add(vertices.get(source));
-            }
-    
-            /* solve the problem by using BFS */
-            bfs(vertices, graph, 1);
-    
-            for (Vertex vertex : vertices.values()) {
-                if (vertex.distance == max) answer++;
-            }
-    
-            return answer;
-        }
-    
-        private void bfs(HashMap<Integer, Vertex> vertices, HashMap<Vertex, ArrayList<Vertex>> graph, int source) {
-            Vertex vertex;
-            ArrayList<Vertex> queue = new ArrayList<Vertex>();
-            vertices.get(source).color = Color.GRAY;        
-    
-            /* enqueue */
-            queue.add(vertices.get(source));
-    
-            while (!queue.isEmpty()) {
-    
-                /* dequeue */
-                vertex = queue.get(0);
-                queue.remove(0);
-    
-                for (Vertex adj : graph.get(vertex)) {
-                    if (adj.color == Color.WHITE) {
-                        adj.color = Color.GRAY;
-                        adj.distance = vertex.distance + 1;
-                        adj.preVertex = vertex;
-                        queue.add(adj);
-                        max = Math.max(max, adj.distance);
-                    }
-                }
-    
-                vertex.color = Color.BLACK;
-            }
-        }
-    }
 
 너비 우선 검색(BFS, Breadth-First Search)는 가장 단순한 그래프 검색 알고리즘 중 하나이다. 너비 우선 검색은 주어진 그래프 *G* = (*V, E*)와 한 개의 구별되는 ***출발점***(*source*) *s*에 대해, 너비 우선 검색은 *s*로부터 도달할 수 있는 모든 정점을 "발견"하기 위해서 *G*의 간선을 체계적으로 탐색한다. 이것은 ***s*로 부터 도달할 수 있는 각 정점까지의 거리(가장 적은 간선의 수)를 계산**한다.
 
@@ -135,29 +36,29 @@ n개의 노드가 있는 그래프가 있습니다. 각 노드는 1부터 n까�
 
 다음의 너비 우선 검색 프로시저 **BFS**는 입력 그래프 *G* = (*V, E*)가 인접 리스트를 이용해 표현된다고 가정한다. 이는 **그래프의 각 정점에 대해 다양한 추가 속성을 부여**한다. 각 정점 *u* ∈ *V*의 색은 속성 *u*.*color*에 저장되고 *u*의 직전 원소는 속성 *u*.*π*에 저장된다. *u*에 직전 원소가 없는 경우라면, *u.π*는 *null*이다. 속성 *u.d*는 이 알고리즘으로 계산된 출발점 *s*에서 정점 *u*까지의 거리를 저장한다. 이 알고리즘은 또한 회색 정점의 집합을 관리하기 위해 선입선출(first-in, first-out) 큐인 *Q*를 사용한다.
 
-**BFS**(*G, s*)
-
-1. *max* ← 0 
-2. **for each** *u* **in** *G.V* - {*s*}:
-3.        *u.color* ← WHITE
-4.        *u.d* ← ∞
-5.        *u.π* ← *null* 
-6.  *s.color* ← GRAY
-7.  *s.d* ← 0
-8.  *s.π* ← *null*
-9.  *Q* ← Empty Queue
-10.  **ENQUEUE**(*Q.s*)
-11.  **while** *Q* **is not** empty queue:
-12.        *u* ← **DEQUEUE**(*Q*)
-13.        **for each** *v* **in** *G.Adj*[*u*]:
-14.              **if** *v.color* **is** WHITE:
-15.                    *v.color* ← GRAY
-16.                    *v.d* ← *u.d* + 1
-17.                    *v.π* ← *u*
-18.                    **ENQUEUE**(*Q*, *v*)
-19.                    **if** *max* **is less than** *v.d*:
-20.                            *max* ← *v.d* 
-21.        *u.color* ← BLACK
+    **BFS**(*G, s*)
+    
+    1. *max* ← 0 
+    2. **for each** *u* **in** *G.V* - {*s*}:
+    3.        *u.color* ← WHITE
+    4.        *u.d* ← ∞
+    5.        *u.π* ← *null* 
+    6.  *s.color* ← GRAY
+    7.  *s.d* ← 0
+    8.  *s.π* ← *null*
+    9.  *Q* ← Empty Queue
+    10.  **ENQUEUE**(*Q.s*)
+    11.  **while** *Q* **is not** empty queue:
+    12.        *u* ← **DEQUEUE**(*Q*)
+    13.        **for each** *v* **in** *G.Adj*[*u*]:
+    14.              **if** *v.color* **is** WHITE:
+    15.                    *v.color* ← GRAY
+    16.                    *v.d* ← *u.d* + 1
+    17.                    *v.π* ← *u*
+    18.                    **ENQUEUE**(*Q*, *v*)
+    19.                    **if** *max* **is less than** *v.d*:
+    20.                            *max* ← *v.d* 
+    21.        *u.color* ← BLACK
 
 하나의 인접 리스트에 포함되는 노드의 color가 변화할 때, 다른 인접 리스트에 포함되는 동일한 노드의 color 변화를 동기화 하기 위하여 동일한 노드를 참조하는 변수를 인접리스트에 추가하였다. 즉, 그래프 초기화 시 인접 리스트에 추가되는 각 노드에 대해 얕은 복사를 수행하여 heap 메모리 영역에 위치하는 동일한 인스턴스를 참조하게 하였다.
 
