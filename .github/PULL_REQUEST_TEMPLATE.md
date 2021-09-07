@@ -1,5 +1,5 @@
 ## Issue 번호
-https://github.com/A1B6/leetcode/issues/3
+https://github.com/Injun-Jeong/Prepare-Coding-Test-JAVA/issues/1
 
 ## 풀이 요약
 * Runtime: _000 ms_
