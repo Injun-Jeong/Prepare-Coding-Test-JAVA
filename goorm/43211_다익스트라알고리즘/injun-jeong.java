@@ -8,30 +8,16 @@ public class Q43211 {
     private static BufferedReader br;
     private static int N, E;
     private static ArrayList<List<Node>> graph;
-    private static Distance[] dists;
+    private static int[] dist;
     private static int initIdx;
 
 
     static class Node {
         int idx, weight;
-        Node next, prev;
 
-        Node(int idx, int weight, Node next, Node prev) {
+        Node(int idx, int weight) {
             this.idx = idx;
             this.weight = weight;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
-
-    static class Distance {
-        int dist;
-        Node node;
-
-        Distance(int dist, Node node) {
-            this.dist = dist;
-            this.node = node;
         }
     }
 
@@ -47,7 +33,7 @@ public class Q43211 {
         createEdge();
 
         /* get the min distance for each node */
-        Node startNode = new Node(initIdx, 0, null, null);
+        Node startNode = new Node(initIdx, 0);
         dijkstra(graph.get(initIdx), startNode);
 
         /* result */
@@ -61,10 +47,9 @@ public class Q43211 {
         String[] inputs = input.split(" ");
         N = Integer.parseInt(inputs[0]);
         E = Integer.parseInt(inputs[1]);
-        dists = new Distance[N + 1];
+        dist = new int[N + 1];
         for (int idx = 1; idx <= N; idx++) {
-            Distance dist = new Distance(Integer.MAX_VALUE, null);
-            dists[idx] = dist;
+            dist[idx] = Integer.MAX_VALUE;
         }
     }
 
@@ -84,32 +69,29 @@ public class Q43211 {
             /* input data */
             String input = br.readLine();
             String[] inputs = input.split(" ");
-            int idxStart = Integer.parseInt(inputs[0]);
-            int idxEnd = Integer.parseInt(inputs[1]);
+            int srcIdx = Integer.parseInt(inputs[0]);
+            int destIdx = Integer.parseInt(inputs[1]);
             int weight = Integer.parseInt(inputs[2]);
 
             /* create node */
-            Node node1 = new Node(idxStart, weight, null, null);
-            Node node2 = new Node(idxEnd, weight, null, null);
+            Node srcNode = new Node(srcIdx, weight);
+            Node destNode = new Node(destIdx, weight);
 
             /* create edge */
-            graph.get(idxStart).add(node2);
-            graph.get(idxEnd).add(node1);
+            graph.get(srcIdx).add(destNode);
+            graph.get(destIdx).add(srcNode);
         }
 
         String input = br.readLine();
         initIdx = Integer.parseInt(input);
-        dists[initIdx].dist = 0;
+        dist[initIdx] = 0;
     }
 
 
     private static void dijkstra(List<Node> list, Node prevNode) {
         for (int idx = 0; idx < list.size(); idx++) {
-            if ( (dists[list.get(idx).idx].dist == Integer.MAX_VALUE) || dists[list.get(idx).idx].dist > dists[prevNode.idx].dist + list.get(idx).weight ) {
-                dists[list.get(idx).idx].dist = dists[prevNode.idx].dist + list.get(idx).weight;
-                dists[list.get(idx).idx].node = list.get(idx);
-                list.get(idx).prev = prevNode;
-                prevNode.next = list.get(idx);
+            if ( (dist[list.get(idx).idx] == Integer.MAX_VALUE) || dist[list.get(idx).idx] > dist[prevNode.idx] + list.get(idx).weight ) {
+                dist[list.get(idx).idx] = dist[prevNode.idx] + list.get(idx).weight;
                 dijkstra(graph.get(list.get(idx).idx), list.get(idx));
             }
         }
@@ -118,7 +100,7 @@ public class Q43211 {
 
     private static void printResult() {
         for (int idx = 1; idx <= N; idx++) {
-            System.out.println(idx + ": " + dists[idx].dist);
+            System.out.println(idx + ": " + dist[idx]);
         }
     }
 }
