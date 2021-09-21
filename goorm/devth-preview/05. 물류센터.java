@@ -26,7 +26,7 @@ public class Q05 {
                 if (idx == jdx) {
                     map[idx][jdx] = 0;
                 } else {
-                    map[idx][jdx] = 101;
+                    map[idx][jdx] = Long.MAX_VALUE;
                 }
             }
         }
@@ -56,7 +56,10 @@ public class Q05 {
         for (int k = 0; k < N; k++) {
             for (int src = 0; src < N; src++) {
                 for (int dest = 0; dest < N; dest++) {
-                    if (map[src][k] + map[k][dest] < map[src][dest]) {
+                    if (map[src][k] == Long.MAX_VALUE || map[k][dest] == Long.MAX_VALUE) {
+                        continue;
+                    }
+                    else if (map[src][k] + map[k][dest] < map[src][dest]) {
                         map[src][dest] = map[src][k] + map[k][dest];
                     }
                 }
