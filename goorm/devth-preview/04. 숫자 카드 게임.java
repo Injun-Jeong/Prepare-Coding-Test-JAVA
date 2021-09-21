@@ -1,6 +1,8 @@
 package goorm.devth;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 // 5:00~
 public class Q04 {
@@ -22,21 +24,40 @@ public class Q04 {
     }
 
 
-    /*
-    fir + sec + ?
-    <=> ? where (N - fir - sec) % N = 0
-     */
     private static void getAnswer() {
-        long temp = 0l;
-        for (long first = 0; first <= N - K; first++) {
-            for (long second = first + 1; second <= N - K + 1; second++) {
-                temp = (N - first - second) % N;
-                if ( second < temp ) {
-                    answer++;
-                }
+        List<Long> list = new ArrayList<>();
+        combination(list, 0);
+        System.out.println(answer);
+    }
+
+
+    private static void combination(List<Long> list, long item) {
+        if (list.size() == K) {
+            if ( isOk(list) ) {
+                answer = (answer + 1) % 1000000007l;
             }
+            return;
         }
 
-        System.out.println(answer);
+        if ( item >= N ) {
+            return;
+        }
+
+        // include
+        List<Long> deepCopy = new ArrayList<>(list);
+        deepCopy.add(item);
+        combination(deepCopy, item + 1l);
+
+        // no way
+        combination(list, item + 1l);
+    }
+
+
+    private static boolean isOk(List<Long> list) {
+        long sum = 0l;
+        for (int idx = 0; idx < list.size(); idx++) {
+            sum += list.get(idx);
+        }
+        return sum % N == 0;
     }
 }
