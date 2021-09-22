@@ -1,11 +1,12 @@
 package goorm;
 
 import java.io.*;
+import java.math.BigDecimal;
 
 public class Q124649 {
     private static BufferedReader br;
     private static long A, B, C;
-    private static double answer;
+    private static BigDecimal answer;
 
     public static void main(String[] args) throws Exception {
         setup();
@@ -19,12 +20,12 @@ public class Q124649 {
         A = Long.parseLong(inputs[0]);
         B = Long.parseLong(inputs[1]);
         C = Long.parseLong(inputs[2]);
-        answer = 0;
+        answer = BigDecimal.ZERO;
     }
 
     private static void getAnswer() {
         double base = A + Math.sqrt(B);
-        answer = Math.pow(base, C);
-        System.out.println((long) answer);
+        answer = BigDecimal.valueOf(Math.pow(base, C));
+        System.out.println(answer.setScale(0, BigDecimal.ROUND_DOWN));
     }
 }
