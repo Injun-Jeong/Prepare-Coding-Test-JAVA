@@ -2,6 +2,7 @@ package leetcode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PriorityQueue;
 
 public class Q1514_Path_with_Maximum_Probability {
     private int N;
@@ -57,14 +58,28 @@ public class Q1514_Path_with_Maximum_Probability {
 
 
     private void dijkstra(int start) {
-        List<Node> list = adjs.get(start);
-        for (Node node : list) {
-            if ( memo[node.idx] <= 0 ) {
-                memo[node.idx] = memo[start] * node.prob;
-                dijkstra(node.idx);
-            } else if ( memo[node.idx] < memo[start] * node.prob ) {
-                memo[node.idx] = memo[start] * node.prob;
-                dijkstra(node.idx);
+        int idx;
+        List<Node> list;
+
+        PriorityQueue<Integer> pq = new PriorityQueue<>((n1, n2) -> {
+            if (memo[n2] - memo[n1] > 0) { return 1; }
+            else if (memo[n2] - memo[n1] == 0) { return 0; }
+            else { return -1; }
+        });
+        pq.add(start);
+
+        while ( !pq.isEmpty() ) {
+            idx = pq.remove();
+            list = adjs.get(idx);
+
+            for (Node node : list) {
+                if ( memo[node.idx] <= 0 ) {
+                    memo[node.idx] = memo[idx] * node.prob;
+                    pq.add(node.idx);
+                } else if ( memo[node.idx] < memo[idx] * node.prob ) {
+                    memo[node.idx] = memo[idx] * node.prob;
+                    pq.add(node.idx);
+                }
             }
         }
     }
